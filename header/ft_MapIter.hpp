@@ -76,7 +76,7 @@ namespace ft {
 
 		private:
 			ptr _Ptr;
-	}
+	};
 }
 
 #endif

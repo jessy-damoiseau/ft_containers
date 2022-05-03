@@ -11,6 +11,7 @@
 #include "../header/ft_Pair.hpp"
 #include "../header/ft_Vector.hpp"
 #include "../header/ft_Stack.hpp"
+#include "../header/ft_Map.hpp"
 #include <exception>
 
 
