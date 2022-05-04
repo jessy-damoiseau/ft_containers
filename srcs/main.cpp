@@ -184,13 +184,8 @@ int main(){
 	std::cout << "-                                  MAP                                -" << std::endl;
 	std::cout << "-----------------------------------------------------------------------" << std::endl;
 
-	ft::map<int, std::string> testmap;
-	testmap[1] = "test1";
-	testmap[2] = "test1";
-	testmap[3] = "test1";
-	testmap[4] = "test1";
-	testmap[5] = "test1";
-	testmap[6] = "test1";
+	ft::map<char, std::string> testmap;
+	testmap['a'] = "test1";
 	//ft::map<int, std::string> testmap1(testmap.begin(), testmap.end());
 //	ft::map<int, std::string> testmap2(testmap1);
 
