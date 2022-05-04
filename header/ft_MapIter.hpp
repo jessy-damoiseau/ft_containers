@@ -1,8 +1,8 @@
 #ifndef FT_MAPITER_HPP
-#define FT_MAPITER_HPP
+# define FT_MAPITER_HPP
 
-#include "ft_TreeStruct.hpp"
-#include "ft_Iter.hpp"
+# include "ft_TreeStruct.hpp"
+# include "ft_Iter.hpp"
 
 namespace ft {
 
