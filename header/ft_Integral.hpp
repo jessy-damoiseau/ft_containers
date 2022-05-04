@@ -1,6 +1,8 @@
 #ifndef FT_INTEGRAL_HPP
 #define FT_INTEGRAL_HPP
 
+#include <uchar.h>
+
 namespace ft {
 
 	template <class T, T v>
@@ -18,8 +20,6 @@ namespace ft {
 
 	template<> struct is_integral<bool> : true_type {};
 	template<> struct is_integral<char> : true_type {};
-	template<> struct is_integral<char16_t> : true_type {};
-	template<> struct is_integral<char32_t> : true_type {};
 	template<> struct is_integral<wchar_t> : true_type {};
 	template<> struct is_integral<signed char> : true_type {};
 	template<> struct is_integral<short int> : true_type {};
@@ -34,8 +34,6 @@ namespace ft {
 
 	template<> struct is_integral<const bool> : true_type {};
 	template<> struct is_integral<const char> : true_type {};
-	template<> struct is_integral<const char16_t> : true_type {};
-	template<> struct is_integral<const char32_t> : true_type {};
 	template<> struct is_integral<const wchar_t> : true_type {};
 	template<> struct is_integral<const signed char> : true_type {};
 	template<> struct is_integral<const short int> : true_type {};

@@ -38,7 +38,7 @@ namespace ft{
 
 			template<class InputIterator>
 			vector(InputIterator first, InputIterator last, const allocator_type &alloc = allocator_type(),
-				   typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = nullptr) :
+				   typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0) :
 				_StockCap(last - first), _StockSize(0), _Alloc(alloc) {
 				if (_StockCap)
 					_Stock = _Alloc.allocate(_StockCap);
@@ -147,7 +147,7 @@ namespace ft{
 			const_reference back() const { return _Stock[_StockSize - 1]; }
 
 			template<class InputIterator>
-			void    assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = nullptr){
+			void    assign(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0){
 				for(size_type i = 0; i < _StockSize; i--){
 					_Alloc.destroy(&_Stock[i]);
 				}
@@ -283,7 +283,7 @@ namespace ft{
 			}
 
 			template<class InputIterator>
-			void        insert(iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = nullptr){
+			void        insert(iterator pos, InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0){
 				size_type n = last - first;
 				size_type dist = pos - begin();
 				size_type diste = dist + n;

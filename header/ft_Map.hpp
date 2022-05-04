@@ -22,7 +22,7 @@ namespace ft {
 					typedef typename allocator_type::pointer                             pointer;
 					typedef typename allocator_type::const_pointer                       const_pointer;
 					typedef ft::map_iterator<ft::tree_struct<value_type> >       iterator;
-					typedef ft::map_iterator<const ft::tree_struct<value_type> > const_iterator;
+					typedef ft::map_const_iterator<ft::tree_struct<value_type> > const_iterator;
 					typedef ft::reverse_iterator<iterator>                      reverse_iterator;
 					typedef ft::reverse_iterator<const_iterator>                const_reverse_iterator;
 					typedef ptrdiff_t                                           difference_type;
@@ -40,11 +40,11 @@ namespace ft {
 					};
 
 					explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) :
-						_Stock(0), _Size(0), _Comp(comp), _Alloc(alloc) {}
+						_Stock(0), _Size(0), _Alloc(alloc), _Comp(comp) {}
 
 					template<class InputIterator>
 					map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type(),
-					    typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = nullptr)	:
+					    typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0)	:
 						_Stock(0), _Size(0), _Alloc(alloc), _Comp(comp) {
 						insert(first, last);
 					}
@@ -98,7 +98,7 @@ namespace ft {
 					mapped_type     &operator[](const key_type &k){
 						iterator it = find(k);
 						if (it == end())
-							it = insert(ft::make_pair(k, mapped_type())).second;
+							it = insert(ft::make_pair(k, mapped_type())).first;
 						return (it->Stock.second);
 					}
 
@@ -199,7 +199,7 @@ namespace ft {
 
 					template<class InputIterator>
 					void    insert(InputIterator first, InputIterator last,
-								typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = nullptr){
+								typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0){
 						for(; first != last; first++){
 							func_insert(_Stock, *first);
 						}
@@ -217,17 +217,58 @@ namespace ft {
 						_Size = 0;
 					}
 
+					void erase(iterator position){
+						if (position == end() || !_Size)
+							return ;
+						iterator itsupp = find(position->Stock.first);
+						if (itsupp == 0)
+							return ;
+						typedef ft::tree_struct<value_type> tree;
+						tree supp = itsupp->Stock;
+						if (_Comp(supp.first, supp->prev->Stock.first))
+							supp->prev->left = 0;
+						else
+							supp->prev->right = 0;
+						supp->prev = 0;
+						iterator itins = itsupp;
+						while (itins->left)
+							itins = itins->left;
+						insert(itins, itsupp);
+						itins = itsupp;
+						while (itins->right)
+							itins = itins->right;
+						insert(itsupp->right, itins + 1);
+						destroy_branch(itsupp->Stock);
+						_Size--;
+					}
+
+					size_type erase(const key_type &k){
+						iterator it = find(k);
+						if (it){
+							erase(it);
+							return (1);
+						}
+						return (0);
+					}
+
+					void erase(iterator first, iterator last){
+						for (; first != last; first++)
+							erase(first);
+					}
+
 				private:
-					ft::tree_struct<value_type> _Stock;
+					ft::tree_struct<value_type> *_Stock;
 					size_type                   _Size;
 					allocator_type              _Alloc;
 					key_compare                 _Comp;
 
-					ft::pair<iterator, bool> func_insert(ft::tree_struct<value_type> stock, const value_type &value) {
+					ft::pair<iterator, bool> func_insert(ft::tree_struct<value_type> *stock, const value_type &value) {
 						typedef ft::tree_struct<value_type> tree;
+						typedef std::allocator<tree> alloc_tree;
+						alloc_tree tmp_alloc;
 						if (!_Stock){
-							_Stock = _Alloc.allocate(1);
-							_Alloc.construct(_Stock, tree(value));
+							_Stock = tmp_alloc.allocate(1);
+							tmp_alloc.construct(_Stock, tree(value));
 							_Size++;
 							return (ft::pair<iterator, bool>(iterator(_Stock), true));
 						}
@@ -242,8 +283,8 @@ namespace ft {
 							else
 								return ( ft::pair<iterator, bool>(iterator(tmp), false));
 						}
-						tmp = _Alloc.allocate(1);
-						_Alloc.construct(tmp, tree(value));
+						tmp = tmp_alloc.allocate(1);
+						tmp_alloc.construct(tmp, tree(value));
 						_Size++;
 						if (_Comp(value.first, tmpPrev->Stock.first))
 							tmpPrev->left = tmp;

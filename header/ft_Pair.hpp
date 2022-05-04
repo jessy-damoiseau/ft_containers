@@ -8,7 +8,7 @@ namespace ft {
 		typedef T2 second_type;
 
 		pair() : first(), second() {}
-		template<class U, class V> pair(const pair<U,V>& inst): first(inst._first), second(inst.second) {}
+		template<class U, class V> pair(const pair<U,V>& inst): first(inst.first), second(inst.second) {}
 		pair (const first_type &a, const second_type &b) : first(a), second(b) {}
 
 		pair &operator=(const pair &inst){ first= inst.first; second = inst.second; return *this; }
