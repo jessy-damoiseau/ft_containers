@@ -14,7 +14,7 @@ namespace ft {
 				public:
 					typedef Key                                                 key_type;
 					typedef T                                                   mapped_type;
-					typedef pair<const Key, T>                                  value_type;
+					typedef ft::pair<const Key, T>                                  value_type;
 					typedef Compare                                             key_compare;
 					typedef Alloc                                               allocator_type;
 					typedef typename allocator_type::reference                           reference;
@@ -44,7 +44,7 @@ namespace ft {
 
 					template<class InputIterator>
 					map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type(),
-					    typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0)	:
+					    typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0) :
 						_Stock(0), _Size(0), _Alloc(alloc), _Comp(comp) {
 						insert(first, last);
 					}

@@ -26,7 +26,7 @@ namespace ft {
 				return (*this);
 			}
 
-			reference   operator*() const  { return (_Ptr->Stock); }
+			reference   operator*() const  { return (*_Ptr); }
 			pointer     operator->() const { return (&(operator*())); }
 			ptr         base() const { return (_Ptr); }
 
