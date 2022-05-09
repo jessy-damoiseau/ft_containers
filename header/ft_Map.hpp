@@ -7,6 +7,7 @@
 #include "ft_MapIter.hpp"
 #include "ft_RevIter.hpp"
 #include "ft_TreeStruct.hpp"
+#include "ft_Map2.hpp"
 
 namespace ft
 {
@@ -24,8 +25,8 @@ namespace ft
 			typedef typename allocator_type::const_reference				const_reference;
 			typedef typename allocator_type::pointer						pointer;
 			typedef typename allocator_type::const_pointer					const_pointer;
-			typedef ft::map_iterator<ft::tree_struct<value_type> >			iterator;
-			typedef ft::map_const_iterator<ft::tree_struct<value_type> >	const_iterator;
+			typedef typename ft::SubMap<value_type, key_compare>::iterator 			iterator;
+			typedef typename ft::SubMap<value_type, key_compare>::const_iterator	const_iterator;
 			typedef ft::reverse_iterator<iterator>							reverse_iterator;
 			typedef ft::reverse_iterator<const_iterator>					const_reverse_iterator;
 			typedef ptrdiff_t												difference_type;
@@ -45,96 +46,57 @@ namespace ft
 		};
 
 					explicit map(const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type()) :
-						_Stock(0), _Size(0), _Alloc(alloc), _Comp(comp) {}
+						_Stock(comp), _Alloc(alloc), _Comp(comp) {}
 
 					template<class InputIterator>
 					map(InputIterator first, InputIterator last, const key_compare &comp = key_compare(), const allocator_type &alloc = allocator_type(),
 					    typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0) :
-						_Stock(0), _Size(0), _Alloc(alloc), _Comp(comp) {
-						insert(first, last);
+						_Stock(comp), _Alloc(alloc), _Comp(comp) {
+						_Stock.insert(first, last);
 					}
 
-					map(const map &x) { *this = x; }
-
+					map(const map &x) : _Stock(x._Stock), _Alloc(x._Alloc), _Comp(x._Comp){}
 					~map(){}
 
-					iterator                begin() {
-						ft::tree_struct<value_type> *tmp = _Stock;
-						while (tmp->left)
-							tmp = tmp->left;
-						return tmp;
-					}
-					const_iterator          begin() const {
-						ft::tree_struct<value_type> *tmp = _Stock;
-						while (tmp->left)
-							tmp = tmp->left;
-						return tmp;
-					}
-					iterator                end() {
-						ft::tree_struct<value_type> *tmp = _Stock;
-						while (tmp->right)
-							tmp = tmp->right;
-						return tmp;
-					}
-					const_iterator          end() const {
-						ft::tree_struct<value_type> *tmp = _Stock;
-						while (tmp->right)
-							tmp = tmp->right;
-						return tmp;
-					}
-					reverse_iterator        rbegin() { return (reverse_iterator(end() + 1)); }
-					const_reverse_iterator  rbegin() const { return (reverse_iterator(end() + 1)); }
-					reverse_iterator        rend() { return (reverse_iterator(this->begin() - 1)); }
-					const_reverse_iterator  rend() const { return (reverse_iterator(this->begin() - 1)); }
+					iterator                begin() { return (_Stock.begin()); }
+					const_iterator          begin() const { return (_Stock.begin()); }
+					iterator                end() { return (_Stock.end()); }
+					const_iterator          end() const { return (_Stock.end()); }
+					reverse_iterator        rbegin() { return (_Stock.rbegin()); }
+					const_reverse_iterator  rbegin() const { return (_Stock.rbegin()); }
+					reverse_iterator        rend() { return (_Stock.rend()); }
+					const_reverse_iterator  rend() const { return (_Stock.rend()); }
 
 
-					bool            empty() const { return _Size == 0; }
-					size_type       size() const { return _Size; }
-					size_type       max_size() const { return _Alloc.max_size(); }
+					bool            empty() const { return size() == 0; }
+					size_type       size() const { return (_Stock.size()); }
+					size_type       max_size() const { return (_Stock.max_size()); }
 					allocator_type  get_allocator() const { return _Alloc; }
 
 					map             &operator=(const map &x){
 							_Alloc = x._Alloc;
 							clear();
-							insert(x.begin(), x.end());
+							_Stock.insert(x.begin(), x.end());
 							return (*this);
 					}
 
 					mapped_type     &operator[](const key_type &k){
-						iterator it = find(k);
+						iterator it = _Stock.find(k);
 						if (it == end())
 							it = insert(ft::make_pair(k, mapped_type())).first;
-						return (it->Stock.second);
+						return (it->second);
 					}
 
 
 					iterator        find(const key_type &k) {
-						ft::tree_struct<value_type> *tmp = _Stock;
-						while (tmp){
-							if (tmp->Stock.first == k)
-								return tmp;
-							else if (k < tmp->Stock.first)
-								tmp = tmp->left;
-							else
-								tmp = tmp->right;
-						}
-						return (0);
+						return (iterator(_Stock.find(k)));
 					}
 					const_iterator  find(const key_type &k) const {
-						ft::tree_struct<value_type> *tmp = _Stock;
-						while (tmp){
-							if (tmp->Stock.first == k)
-								return tmp;
-							else if (k < tmp->Stock.first)
-								tmp = tmp->left;
-							else
-								tmp = tmp->right;
-						}
-						return (0);
+						return (const_iterator(_Stock.find(k)));
 					}
 					size_type       count(const key_type &k) const {
-						iterator check = this->find(k);
-						if (check)
+						const_iterator check = find(k);
+						if (check != end())
 							return 1;
 						return 0;
 					}
@@ -195,118 +157,48 @@ namespace ft
 					value_compare   value_comp() const { return (_Comp); }
 
 					ft::pair<iterator, bool> insert(const value_type &val){
-						return (func_insert(_Stock, val));
+						return (_Stock.insert(val));
 					}
 					iterator                 insert(iterator position, const value_type &val){
 						(void)position;
-						return (func_insert(_Stock, val).first);
+						return (_Stock.insert(val).first);
 					}
 
 					template<class InputIterator>
 					void    insert(InputIterator first, InputIterator last,
 								typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0){
 						for(; first != last; first++){
-							func_insert(_Stock, *first);
+							insert(*first);
 						}
 					}
 
 					void swap(map &x){
-						ft::swap(_Stock, x._Stock);
+						_Stock.swap(x._Stock);
 						ft::swap(_Comp, x._Comp);
 						ft::swap(_Alloc, x._Alloc);
-						ft::swap(_Size, x._Size);
 					}
 
 					void clear() {
-						destroy_branch(_Stock);
-						_Size = 0;
+						_Stock.clear();
 					}
 
 					void erase(iterator position){
-						if (position == end() || !_Size)
-							return ;
-						iterator itsupp = find(position->Stock.first);
-						if (itsupp == 0)
-							return ;
-						typedef ft::tree_struct<value_type> tree;
-						tree supp = itsupp->Stock;
-						if (_Comp(supp.first, supp->prev->Stock.first))
-							supp->prev->left = 0;
-						else
-							supp->prev->right = 0;
-						supp->prev = 0;
-						iterator itins = itsupp;
-						while (itins->left)
-							itins = itins->left;
-						insert(itins, itsupp);
-						itins = itsupp;
-						while (itins->right)
-							itins = itins->right;
-						insert(itsupp->right, itins + 1);
-						destroy_branch(itsupp->Stock);
-						_Size--;
+						_Stock.erase(position);
 					}
 
 					size_type erase(const key_type &k){
-						iterator it = find(k);
-						if (it){
-							erase(it);
-							return (1);
-						}
-						return (0);
+						return (_Stock.erase(k));
 					}
 
 					void erase(iterator first, iterator last){
-						for (; first != last; first++)
-							erase(first);
+						_Stock.erase(first, last);
 					}
 
 				private:
-					ft::tree_struct<value_type> *_Stock;
-					size_type                   _Size;
-					allocator_type              _Alloc;
-					key_compare                 _Comp;
+					ft::SubMap<value_type, key_compare> _Stock;
+					allocator_type                      _Alloc;
+					key_compare                         _Comp;
 
-					ft::pair<iterator, bool> func_insert(ft::tree_struct<value_type> *stock, const value_type &value) {
-						typedef ft::tree_struct<value_type> tree;
-						typedef std::allocator<tree> alloc_tree;
-						alloc_tree tmp_alloc;
-						if (!_Stock){
-							_Stock = tmp_alloc.allocate(1);
-							tmp_alloc.construct(_Stock, tree(value));
-							_Size++;
-							return (ft::pair<iterator, bool>(iterator(_Stock), true));
-						}
-						tree *tmp = stock;
-						tree *tmpPrev = 0;
-						while (tmp){
-							tmpPrev = tmp;
-							if (_Comp(value.first, tmp->Stock.first))
-								tmp = tmp->left;
-							else if (_Comp(tmp->Stock.first, value.first))
-								tmp = tmp->right;
-							else
-								return ( ft::pair<iterator, bool>(iterator(tmp), false));
-						}
-						tmp = tmp_alloc.allocate(1);
-						tmp_alloc.construct(tmp, tree(value));
-						_Size++;
-						if (_Comp(value.first, tmpPrev->Stock.first))
-							tmpPrev->left = tmp;
-						else
-							tmpPrev->right = tmp;
-						tmp->prev = tmpPrev;
-						return ( ft::pair<iterator, bool>(iterator(tmp), true));
-					}
-					void destroy_branch(ft::tree_struct<value_type> *supp){
-						if (supp){
-							destroy_branch(supp->left);
-							destroy_branch(supp->right);
-							_Alloc.destroy(supp);
-							_Alloc.deallocate(supp, 1);
-							supp = 0;
-						}
-					}
 
 	};
 }

@@ -186,7 +186,36 @@ int main(){
 
 	ft::map<char, std::string> testmap;
 	testmap['a'] = "test1";
-	//ft::map<int, std::string> testmap1(testmap.begin(), testmap.end());
-//	ft::map<int, std::string> testmap2(testmap1);
+	testmap['b'] = "test2";
+	testmap['c'] = "test3";
+	testmap['d'] = "test4";
+	testmap['e'] = "test5";
+	testmap['f'] = "test6";
+	ft::map<char, std::string> testmap2;
+	testmap2.insert(testmap.begin(), testmap.end());
+	typedef ft::map<char, std::string>::iterator map_iter;
+
+	map_iter map_it = testmap2.begin();
+	map_iter map_ite = testmap2.end();
+	for(; map_it != map_ite; map_it++){
+		std::cout << "key -> " << map_it->first << ", value -> " << map_it->second << std::endl;
+	}
+	std::cout << "size -> " << testmap2.size() << std::endl;
+	if (testmap2.count('e'))
+		std::cout << "e exist" << std::endl;
+	else
+		std::cout << "e doesn't exist" << std::endl;
+	testmap2.erase('e');
+
+	map_it = testmap2.begin();
+	map_ite = testmap2.end();
+	for(; map_it != map_ite; map_it++){
+		std::cout << "key -> " << map_it->first << ", value -> " << map_it->second << std::endl;
+	}
+	std::cout << "size -> " << testmap2.size() << std::endl;
+	if (testmap2.count('e'))
+		std::cout << "e exist" << std::endl;
+	else
+		std::cout << "e doesn't exist" << std::endl;
 
 }
