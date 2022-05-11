@@ -17,7 +17,7 @@ namespace ft {
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
 
 
-		map_iterator() : _Ptr(nullptr) {}
+		map_iterator() : _Ptr(0) {}
 		map_iterator(ptr Ptr) : _Ptr(Ptr) {}
 		map_iterator(ptr Ptr, ptr parent) : _Ptr(Ptr), _parent(parent) {}
 
@@ -118,7 +118,7 @@ namespace ft {
 		typedef typename ft::iterator<ft::bidirectional_iterator_tag, value_type>::iterator_category	iterator_category;
 
 
-		map_const_iterator() : _Ptr(nullptr) {}
+		map_const_iterator() : _Ptr(0) {}
 		map_const_iterator(ptr Ptr) : _Ptr(Ptr) {}
 		map_const_iterator(ptr Ptr, ptr parent) : _Ptr(Ptr), _parent(parent) {}
 

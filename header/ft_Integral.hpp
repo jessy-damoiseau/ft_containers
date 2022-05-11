@@ -1,7 +1,7 @@
 #ifndef FT_INTEGRAL_HPP
 #define FT_INTEGRAL_HPP
 
-//#include <uchar.h>
+#include <uchar.h>
 
 namespace ft {
 
