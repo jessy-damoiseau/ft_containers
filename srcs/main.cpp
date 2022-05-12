@@ -1,217 +1,13 @@
 
 
 #include <iostream>
-#include <vector>
-#include <stack>
+#include <exception>
 #include "../header/ft_Stack.hpp"
 #include "../header/ft_Vector.hpp"
-#include <exception>
+#include "../header/ft_Map.hpp"
+#include "../header/ft_Pair.hpp"
 
 
-
-/*template <class T>
-		typename ft::enable_if<ft::is_integral<T>::value, bool>::type
-		is_odd(T i) { std::cout << "check" << std::endl ;return bool(i%2);}
-
-int main(){
-
-	// *** ITERATOR / REVERSE_ITERATOR *** //
-
-	int tab[] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
-	typedef ft::random_access_iterator<int> iterator;
-	typedef ft::reverse_iterator<iterator> rev_iter;
-	iterator it(&tab[0]);
-	iterator ite(&tab[10]);
-	rev_iter rev_it(ite);
-	rev_iter rev_ite(it);
-
-	std::cout << ite - it << std::endl;
-
-	for (iterator t = it; t < ite; t++) {
-		std::cout << *t << std::endl;
-	}
-
-	std::cout << "len -> " << (rev_ite - rev_it) << std::endl;
-	for (rev_iter t = rev_it; t > rev_ite; t++){
-		std::cout << *t << std::endl;
-	}
-
-	// *** ENABLE_IF *** //
-
-	std::cout << std::boolalpha;
-	std::cout << "int -> " << (ft::is_integral<int>::value) << std::endl;
-	std::cout << "float -> " << (ft::is_integral<float>::value) << std::endl;
-
-	std::cout << "enable_if, odd -> " << is_odd(1) << std::endl;
-	std::cout << "enable_if, odd -> " << is_odd(2) << std::endl;
-
-	// *** EQUAL *** //
-
-	std::vector<int> myvector(tab, tab+10);
-
-	if ( ft::equal(myvector.begin(), myvector.end(), tab))
-		std::cout << "vector and tab is equal" << std::endl;
-	else
-		std::cout << "vector and tab is diff" << std::endl;
-	myvector[2] = 12;
-	if ( ft::equal(myvector.begin(), myvector.end(), tab))
-		std::cout << "vector and tab is equal" << std::endl;
-	else
-		std::cout << "vector and tab is diff" << std::endl;
-
-	// *** PAIR / MAKE_PAIR *** //
-
-	char foo[] = "apple";
-	char bar[] = "apartment";
-	std::cout << "lexico foo/bar -> " << ft::lexicographical_compare(foo, foo+5, bar, bar+9) << std::endl;
-	std::cout << "lexico bar/foo -> " << ft::lexicographical_compare(bar, bar+9, foo, foo+5) << std::endl;
-
-	ft::pair<std::string, int> test1;
-	ft::pair<int, double> test2(42, 12.25);
-
-	test1 = ft::make_pair(std::string("bonjour ceci est un test"), 90);
-	std::cout << "pair: test1.first -> "<< test1.first << " , test1.second -> " << test1.second << std::endl;
-	std::cout << "pair: test2.first -> "<< test2.first << " , test2.second -> " << test2.second << std::endl;
-
-	std::cout << std::endl;
-	ft::vector<int> testvector(5, 10);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-	std::cout << testvector.size() << " " << testvector.capacity() << " " << testvector.max_size() << " " << testvector.empty() << std::endl;
-	std::cout << std::endl;
-	testvector.resize(3);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-	testvector.resize(10);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-
-	testvector.resize(25, 55);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-
-	testvector.reserve(100);
-	std::cout << testvector.size() << " " << testvector.capacity() << " " << testvector.max_size() << " " << testvector.empty() << std::endl;
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-
-	std::cout << std::endl;
-	std::cout << testvector[2] << std::endl;
-	std::cout << std::endl;
-	std::cout << testvector.at(20) << std::endl;
-	std::cout << std::endl;
-	try {
-		std::cout << testvector.at(50) << std::endl;
-	}
-	catch (std::exception &e){
-		std::cout << e.what() << std::endl;
-	}
-	std::cout << std::endl;
-	std::cout << testvector.front() << std::endl;
-	std::cout << std::endl;
-	std::cout << testvector.back() << std::endl;
-
-	std::cout << std::endl;
-	testvector.assign(5, 20);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-	testvector.push_back(8);
-	testvector.push_back(30);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-	testvector.pop_back();
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-	testvector.insert(testvector.begin() + 2,3,  40);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-	testvector.insert(testvector.end() ,3,  40);
-	for (iterator i = testvector.begin(); i != testvector.end(); i++){
-		std::cout << *i << std::endl;
-	}
-
-	std::cout << std::endl;
-	ft::vector<int> test2vec(5, 10);
-	test2vec.insert(test2vec.end(), testvector.begin(), testvector.begin() + 2);
-	for (iterator i = test2vec.begin(); i != test2vec.end(); i++){
-		std::cout << *i << std::endl;
-	}
-	std::cout << std::endl;
-	test2vec.erase(test2vec.begin() + 2, test2vec.end());
-	for (iterator i = test2vec.begin(); i != test2vec.end(); i++){
-		std::cout << *i << std::endl;
-	}
-
-	std::cout << std::endl;
-
-	ft::stack<int> stack_test;
-	stack_test.push(1);
-	if (stack_test.empty())
-		std::cout << "stack empty" << std::endl;
-	else
-		std::cout << "stack no empty" << std::endl;
-	std::cout << stack_test.top() << std::endl;
-	stack_test.push(42);
-	ft::stack<int> stack2;
-	stack2.push(1);
-	stack2.push(42);
-
-	std::cout << "-----------------------------------------------------------------------" << std::endl;
-	std::cout << "-                                  MAP                                -" << std::endl;
-	std::cout << "-----------------------------------------------------------------------" << std::endl;
-
-	ft::map<char, std::string> testmap;
-	testmap['a'] = "test1";
-	testmap['b'] = "test2";
-	testmap['c'] = "test3";
-	testmap['d'] = "test4";
-	testmap['e'] = "test5";
-	testmap['f'] = "test6";
-	ft::map<char, std::string> testmap2;
-	testmap2.insert(testmap.begin(), testmap.end());
-	typedef ft::map<char, std::string>::iterator map_iter;
-
-	map_iter map_it = testmap2.begin();
-	map_iter map_ite = testmap2.end();
-	for(; map_it != map_ite; map_it++){
-		std::cout << "key -> " << map_it->first << ", value -> " << map_it->second << std::endl;
-	}
-	std::cout << "size -> " << testmap2.size() << std::endl;
-	if (testmap2.count('e'))
-		std::cout << "e exist" << std::endl;
-	else
-		std::cout << "e doesn't exist" << std::endl;
-	testmap2.erase('e');
-
-	map_it = testmap2.begin();
-	map_ite = testmap2.end();
-	for(; map_it != map_ite; map_it++){
-		std::cout << "key -> " << map_it->first << ", value -> " << map_it->second << std::endl;
-	}
-	std::cout << "size -> " << testmap2.size() << std::endl;
-	if (testmap2.count('e'))
-		std::cout << "e exist" << std::endl;
-	else
-		std::cout << "e doesn't exist" << std::endl;
-
-}
-*/
 void check_vector(){
 	typedef ft::vector<int>::iterator iterator;
 	typedef ft::vector<int>::reverse_iterator reverse_iterator;
@@ -570,12 +366,203 @@ void check_stack(){
 		std::cout << "stack 1 > stack 2" << std::endl;
 	if (stack1 >= stack2)
 		std::cout << "stack 1 >= stack 2" << std::endl;
+}
+
+void check_map(){
+
+	typedef ft::map<char,int>::iterator iterator;
+	typedef ft::map<char,int>::reverse_iterator reverse_iterator;
+
+	ft::map<char, int> map1;
+
+	map1['a'] = 42;
+	map1['b'] = 1337;
+	map1['c'] = 31415;
+	map1['d'] = 24;
+
+	ft::map<char, int> map2(map1.begin(), map1.end());
+	ft::map<char, int> map3(map2);
+	ft::map<char, int> map4;
+
+	map4 = map1;
+
+
+	std::cout << "--------------------------------------------------" << std::endl;
+	std::cout << "|                    Check_Map                   |" << std::endl;
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Constructor\n" << std::endl;
+
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Map 2:" << std::endl;
+	std::cout << "Size -> " << map2.size() << std::endl;
+	for(iterator it = map2.begin(); it != map2.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Map 3:" << std::endl;
+	std::cout << "Size -> " << map3.size() << std::endl;
+	for(iterator it = map3.begin(); it != map3.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Map 4:" << std::endl;
+	std::cout << "Size -> " << map4.size() << std::endl;
+	for(iterator it = map4.begin(); it != map4.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Iterator\n" << std::endl;
+
+	std::cout << "begin/end\n" << std::endl;
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "rbegin/rend\n" << std::endl;
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(reverse_iterator it = map1.rbegin(); it != map1.rend(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Capacity\n" << std::endl;
+
+	std::cout << "Empty" << std::endl;
+	if (map1.empty())
+		std::cout << "map1 is empty" << std::endl;
+	else
+		std::cout << "map1 is not empty" << std::endl;
+	std::cout << "map1.size() ->" << map1.size() <<  std::endl;
+	std::cout << "map1.max_size() ->" << map1.max_size() <<  std::endl;
+
+
+	std::cout << "Element access\n" << std::endl;
+
+	std::cout << "Operator []" << std::endl;
+
+	std::cout << "map1['a'] = " << map1['a'] << std::endl;
+	std::cout << "map1['z'] = " << map1['z'] << std::endl;
+
+	std::cout << "Modifiers\n" << std::endl;
+
+	ft::map<char,int> map5;
+	map5['z'] = 66;
+	map5['p'] = 33;
+	map5['x'] = -1;
+	ft::pair<char, int> fillmap = ft::make_pair('w', 54);
+
+	std::cout << "Insert fillmap to map2" << std::endl;
+		ft::pair<iterator, bool> res = map2.insert(fillmap);
+		if (res.second)
+			std::cout << "insert done\n" << std::endl;
+		else
+			std::cout << "insert fail\n" << std::endl;
+
+		std::cout << "insert fillmap to map3" << std::endl;
+		iterator res_it = map3.insert(map3.begin(), fillmap);
+		std::cout << "Key -> " << res_it->first << ", Value -> " << res_it->second << "\n" << std::endl;
+
+		std::cout << "Insert map5 in map1" << std::endl;
+
+	map1.insert(map5.begin(), map5.end());
+
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Erase map1.begin() + 1" << std::endl;
+	map1.erase(++map1.begin());
+
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Erase map1['d']" << std::endl;
+	map1.erase('d');
+
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Erase map1.begin() + 3 to map1.end()" << std::endl;
+	iterator b3 = map1.begin();
+	map1.erase(++b3, map1.end());
+
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Swap map1 and map2" << std::endl;
+
+	std::cout << "Before" << std::endl;
+
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Map 2:" << std::endl;
+	std::cout << "Size -> " << map2.size() << std::endl;
+	for(iterator it = map2.begin(); it != map2.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	map1.swap(map2);
+	std::cout << "After" << std::endl;
+
+	std::cout << "Map 1:" << std::endl;
+	std::cout << "Size -> " << map1.size() << std::endl;
+	for(iterator it = map1.begin(); it != map1.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Map 2:" << std::endl;
+	std::cout << "Size -> " << map2.size() << std::endl;
+	for(iterator it = map2.begin(); it != map2.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+	std::cout << "Clear map2" << std::endl;
+
+	map2.clear();
+
+	std::cout << "Map 2:" << std::endl;
+	std::cout << "Size -> " << map2.size() << std::endl;
+	for(iterator it = map2.begin(); it != map2.end(); it++)
+		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
+	std::cout << std::endl;
+
+
+
+
+
+
+
+
 
 }
 
 int main(){
 	check_vector();
 	check_stack();
+	check_map();
 
 	return 0;
 }
