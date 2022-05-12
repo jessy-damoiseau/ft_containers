@@ -3,23 +3,15 @@
 #include <iostream>
 #include <vector>
 #include <stack>
-#include "../header/ft_Iter.hpp"
-#include "../header/ft_RandAccessIter.hpp"
-#include "../header/ft_RevIter.hpp"
-#include "../header/ft_Integral.hpp"
-#include "../header/ft_Utility.hpp"
-#include "../header/ft_Pair.hpp"
-#include "../header/ft_Vector.hpp"
 #include "../header/ft_Stack.hpp"
-#include "../header/ft_Map.hpp"
+#include "../header/ft_Vector.hpp"
 #include <exception>
 
 
 
-template <class T>
+/*template <class T>
 		typename ft::enable_if<ft::is_integral<T>::value, bool>::type
 		is_odd(T i) { std::cout << "check" << std::endl ;return bool(i%2);}
-
 
 int main(){
 
@@ -218,4 +210,372 @@ int main(){
 	else
 		std::cout << "e doesn't exist" << std::endl;
 
+}
+*/
+void check_vector(){
+	typedef ft::vector<int>::iterator iterator;
+	typedef ft::vector<int>::reverse_iterator reverse_iterator;
+
+	ft::vector<int> vec1(10, 100);
+	ft::vector<int> vec2(vec1);
+	ft::vector<int> vec3;
+	ft::vector<int> vec4(vec1.begin(), vec1.end());
+
+	vec3 = vec4;
+	std::cout << "--------------------------------------------------" << std::endl;
+	std::cout << "|                  Check_Vector                  |" << std::endl;
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Constructors\n" << std::endl;
+
+	std::cout << "vector 1:" << std::endl;
+	std::cout << "Capacity -> " << vec1.capacity() << ", Size -> " << vec1.size() << std::endl;
+	for(iterator it = vec1.begin(); it != vec1.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "vector 3:" << std::endl;
+	std::cout << "Capacity -> " << vec3.capacity() << ", Size -> " << vec3.size() << std::endl;
+	for(iterator it = vec3.begin(); it != vec3.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "vector 4:" << std::endl;
+	std::cout << "Capacity -> " << vec4.capacity() << ", Size -> " << vec4.size() << std::endl;
+	for(iterator it = vec4.begin(); it != vec4.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Clear\n" << std::endl;
+
+	vec1.clear();
+
+	std::cout << "vector 1:" << std::endl;
+	std::cout << "Capacity -> " << vec1.capacity() << ", Size -> " << vec1.size() << std::endl;
+	for(iterator it = vec1.begin(); it != vec1.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Iterators\n" << std::endl;
+
+	std::cout << "*** Fill Vector 1 with push_back ***\n" << std::endl;
+	for (size_t i = 0; i < 50; i++){
+		vec1.push_back(i);
+	}
+
+	std::cout << "Use iterator begin/end" << std::endl;
+	iterator it = vec1.begin();
+	iterator ite = vec1.end();
+
+	for (; it != ite; it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Use reverse iterator rbegin/rend" << std::endl;
+	reverse_iterator rit = vec1.rbegin();
+	reverse_iterator rite = vec1.rend();
+	for (; rit != rite; rit++)
+		std::cout << *rit << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Capcity\n" << std::endl;
+
+	std::cout << "Size -> " << vec1.size() << ", Max_size -> " << vec1.max_size() << ", Capacity -> " << vec1.capacity() << std::endl;
+
+	std::cout << "Resize 20" << std::endl;
+
+	vec1.resize(20);
+
+	for(iterator it = vec1.begin(); it != vec1.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Resize 50 with 30" << std::endl;
+
+	vec1.resize(50, 30);
+
+	for(iterator it = vec1.begin(); it != vec1.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	if (vec1.empty())
+		std::cout << "vector 1 is empty\n" << std::endl;
+	else
+		std::cout << "vector 1 is not empty\n" << std::endl;
+
+	std::cout << "Reserve 100" << std::endl;
+
+	vec1.reserve(100);
+	std::cout << "Capacity -> " << vec1.capacity() << "\n" << std::endl;
+
+	std::cout << "Resize 20" << std::endl;
+
+	vec1.resize(20);
+
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Element access\n" << std::endl;
+
+	std::cout << "Use operator [n]" << std::endl;
+	for (size_t i = 0; i < vec1.size(); i++)
+		std::cout << vec1[i] << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Size -> " << vec1.size() << std::endl;
+
+	std::cout << "Use at" << std::endl;
+	try{
+		for (size_t i = 0; i < 6; i++)
+			std::cout << vec1.at(i) << " ";
+		std::cout << "\n" << std::endl;
+		std::cout << vec1.at(100) << std::endl;
+
+	}
+	catch (std::exception &e){
+		std::cout << "Error:" << std::endl;
+		std::cout << e.what() << "\n" << std::endl;
+	}
+
+	std::cout << "Use front/back" << std::endl;
+
+	std::cout << "Front -> " << vec1.front() << ", Back -> " << vec1.back() << std::endl;
+
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Modifiers\n" << std::endl;
+
+	std::cout << "Copy vector 1 to vector 2" << std::endl;
+	vec2 = vec1;
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Assign 7x100 in vector 2" << std::endl;
+	vec2.assign(7, 100);
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Assign vector 1 in vector 2" << std::endl;
+	vec2.assign(vec1.begin(), vec1.end());
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Use pop_back" << std::endl;
+
+	vec2.pop_back();
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Use insert" << std::endl;
+
+	vec2.insert(vec2.begin() + 11, 55);
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "insert 5x40" << std::endl;
+
+	vec2.insert(vec2.begin() + 14, 5, 40);
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "insert vector 1" << std::endl;
+
+	vec2.insert(vec2.begin() + 15, vec1.begin(), vec1.end());
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Use erase" << std::endl;
+
+	std::cout << "Erase 55" << std::endl;
+	vec2.erase(vec2.begin() + 12);
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Erase (begin + 13) to (begin + 38)" << std::endl;
+	vec2.erase(vec2.begin() + 13, vec2.begin() + 38);
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Swap vector 1 and vector 3" << std::endl;
+
+	std::cout << "Before" << std::endl;
+
+	std::cout << "vector 1:" << std::endl;
+	std::cout << "Capacity -> " << vec1.capacity() << ", Size -> " << vec1.size() << std::endl;
+	for(iterator it = vec1.begin(); it != vec1.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "vector 3:" << std::endl;
+	std::cout << "Capacity -> " << vec3.capacity() << ", Size -> " << vec3.size() << std::endl;
+	for(iterator it = vec3.begin(); it != vec3.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	vec1.swap(vec3);
+
+	std::cout << "After" << std::endl;
+
+	std::cout << "vector 1:" << std::endl;
+	std::cout << "Capacity -> " << vec1.capacity() << ", Size -> " << vec1.size() << std::endl;
+	for(iterator it = vec1.begin(); it != vec1.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "vector 3:" << std::endl;
+	std::cout << "Capacity -> " << vec3.capacity() << ", Size -> " << vec3.size() << std::endl;
+	for(iterator it = vec3.begin(); it != vec3.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Copy vector to vector 2" << std::endl;
+
+	vec2 = vec1;
+
+	std::cout << "Clear vector 1" << std::endl;
+
+	vec1.clear();
+
+	std::cout << "vector 1:" << std::endl;
+	std::cout << "Capacity -> " << vec1.capacity() << ", Size -> " << vec1.size() << std::endl;
+	for(iterator it = vec1.begin(); it != vec1.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	if (vec2 == vec3)
+		std::cout << "vector 2 == vector 3" << std::endl;
+	if (vec2 != vec3)
+		std::cout << "vector 2 != vector 3" << std::endl;
+	if (vec2 < vec3)
+		std::cout << "vector 2 < vector 3" << std::endl;
+	if (vec2 <= vec3)
+		std::cout << "vector 2 <= vector 3" << std::endl;
+	if (vec2 > vec3)
+		std::cout << "vector 2 > vector 3" << std::endl;
+	if (vec2 >= vec3)
+		std::cout << "vector 2 >= vector 3" << std::endl;
+
+	std::cout << "vector 2:" << std::endl;
+	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
+	for(iterator it = vec2.begin(); it != vec2.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+	std::cout << "vector 3:" << std::endl;
+	std::cout << "Capacity -> " << vec3.capacity() << ", Size -> " << vec3.size() << std::endl;
+	for(iterator it = vec3.begin(); it != vec3.end(); it++)
+		std::cout << *it << " ";
+	std::cout << "\n" << std::endl;
+
+}
+
+void check_stack(){
+	ft::vector<int> VecForStack(5,100);
+	ft::stack<int> stack1(VecForStack);
+	ft::stack<int> stack2;
+
+
+	stack2 = stack1;
+
+	std::cout << "--------------------------------------------------" << std::endl;
+	std::cout << "|                   Check_Stack                  |" << std::endl;
+	std::cout << "--------------------------------------------------\n" << std::endl;
+
+	std::cout << "Size stack 1 -> " << stack1.size() << ", size stack 2 -> " << stack2.size() << "\n" << std::endl;
+	std::cout << "Check empty stack 1" << std::endl;
+	if (stack1.empty())
+		std::cout << "Stack 1 is empty\n" << std::endl;
+	else
+		std::cout << "Stack 1 is not empty\n" << std::endl;
+
+	std::cout << "push(42) on stack 2\n" << std::endl;
+
+	stack2.push(42);
+
+	std::cout << "Check top/pop on stack 2" << std::endl;
+
+	while (stack2.size()){
+		std::cout << stack2.top() << " ";
+		stack2.pop();
+	}
+	std::cout << "\n" << std::endl;
+
+	std::cout << "Check empty stack 2" << std::endl;
+	if (stack2.empty())
+		std::cout << "Stack 2 is empty\n" << std::endl;
+	else
+		std::cout << "Stack 2 is not empty\n" << std::endl;
+
+	std::cout << "Fill stack 2 [1;12]" << std::endl;
+
+	for (size_t i = 0; i < 12; i++)
+		stack2.push(i);
+
+	/*if (stack1 == stack2)
+		std::cout << "stack 1 == stack 2" << std::endl;
+	if (stack1 != stack2)
+		std::cout << "stack 1 != stack 2" << std::endl;
+	if (stack1 < stack2)
+		std::cout << "stack 1 < stack 2" << std::endl;
+	if (stack1 <= stack2)
+		std::cout << "stack 1 <= stack 2" << std::endl;
+	if (stack1 > stack2)
+		std::cout << "stack 1 > stack 2" << std::endl;
+	if (stack1 >= stack2)
+		std::cout << "stack 1 >= stack 2" << std::endl;*/
+
+}
+
+int main(){
+	check_vector();
+	check_stack();
+
+	return 0;
 }
