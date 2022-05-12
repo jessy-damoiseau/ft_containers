@@ -558,7 +558,7 @@ void check_stack(){
 	for (size_t i = 0; i < 12; i++)
 		stack2.push(i);
 
-	/*if (stack1 == stack2)
+	if (stack1 == stack2)
 		std::cout << "stack 1 == stack 2" << std::endl;
 	if (stack1 != stack2)
 		std::cout << "stack 1 != stack 2" << std::endl;
@@ -569,7 +569,7 @@ void check_stack(){
 	if (stack1 > stack2)
 		std::cout << "stack 1 > stack 2" << std::endl;
 	if (stack1 >= stack2)
-		std::cout << "stack 1 >= stack 2" << std::endl;*/
+		std::cout << "stack 1 >= stack 2" << std::endl;
 
 }
 

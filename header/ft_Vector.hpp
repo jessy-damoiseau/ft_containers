@@ -43,7 +43,7 @@ namespace ft{
 				if (_StockCap)
 					_Stock = _Alloc.allocate(_StockCap);
 				for (; first < last; first++){
-					_Alloc.construct(_Stock[_StockSize++], *first);
+					_Alloc.construct(&_Stock[_StockSize++], *first);
 				}
 			}
 
@@ -388,31 +388,34 @@ namespace ft{
 			allocator_type _Alloc;
 	};
 
-}
-
-template <class T, class  Alloc>
-bool operator==(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) {
-	if (lhs.size() != rhs.size())
-		return (false);
-	for (size_t i = 0; i < lhs.size(); i++){
-		if (lhs[i] != rhs[i])
+	template <class T, class  Alloc>
+	bool operator==(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) {
+		if (lhs.size() != rhs.size())
 			return (false);
+		for (size_t i = 0; i < lhs.size(); i++){
+			if (lhs[i] != rhs[i])
+				return (false);
+		}
+		return (true);
 	}
-	return (true);
-}
-template <class T, class  Alloc>
-bool operator<(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
-template <class T, class  Alloc>
-bool operator!=(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return !(lhs == rhs); }
-template <class T, class  Alloc>
-bool operator<=(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return !(rhs < lhs); }
-template <class T, class  Alloc>
-bool operator>(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return (rhs < lhs); }
-template <class T, class  Alloc>
-bool operator>=(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return !(lhs < rhs); }
+	template <class T, class  Alloc>
+	bool operator<(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return (ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end())); }
+	template <class T, class  Alloc>
+	bool operator!=(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return !(lhs == rhs); }
+	template <class T, class  Alloc>
+	bool operator<=(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return !(rhs < lhs); }
+	template <class T, class  Alloc>
+	bool operator>(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return (rhs < lhs); }
+	template <class T, class  Alloc>
+	bool operator>=(const ft::vector<T, Alloc> &lhs, const ft::vector<T, Alloc> &rhs) { return !(lhs < rhs); }
 
-template <class T, class Alloc>
-void swap(ft::vector<T, Alloc> &x, ft::vector<T, Alloc> &y){
-	x.swap(y);
+	template <class T, class Alloc>
+	void swap(ft::vector<T, Alloc> &x, ft::vector<T, Alloc> &y){
+		x.swap(y);
+	}
+
 }
+
+
+
 #endif
