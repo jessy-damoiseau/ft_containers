@@ -105,7 +105,7 @@ namespace ft
 						iterator it = begin();
 						iterator ite = end();
 						while (it != ite){
-							if (!_Comp(it->Stock.first, k))
+							if (!_Comp(it->first, k))
 								break;
 							it++;
 						}
@@ -115,7 +115,7 @@ namespace ft
 						iterator it = begin();
 						iterator ite = end();
 						while (it != ite) {
-							if (!_Comp(it->Stock.first, k))
+							if (!_Comp(it->first, k))
 								break;
 							it++;
 						}
@@ -125,7 +125,7 @@ namespace ft
 						iterator it = begin();
 						iterator ite = end();
 						while (it != ite) {
-							if (!_Comp(it->Stock.first, k))
+							if (!_Comp(it->first, k))
 								break;
 							it++;
 						}
@@ -137,7 +137,7 @@ namespace ft
 						iterator it = begin();
 						iterator ite = end();
 						while (it != ite) {
-							if (!_Comp(it->Stock.first, k))
+							if (!_Comp(it->first, k))
 								break;
 							it++;
 						}

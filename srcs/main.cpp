@@ -549,13 +549,58 @@ void check_map(){
 		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
 	std::cout << std::endl;
 
+	std::cout << "key/value compare" << std::endl;
 
+	ft::map<char, int>::key_compare mycomp = map1.key_comp();
 
+	if (mycomp(map1.begin()->first, 'a'))
+		std::cout << "key is 'a'" << std::endl;
+	else
+		std::cout << "key is not 'a'" << std::endl;
 
+	ft::pair<char, int> highest = *map1.rbegin();
+	iterator value_comp_it = map1.begin();
 
+	do {
+		std::cout << value_comp_it->first << " => " << value_comp_it->second << std::endl;
+	} while (map1.value_comp()(*value_comp_it++, highest));
 
+	std::cout << "Find x" << std::endl;
 
+	iterator it_x = map1.find('x');
 
+	std::cout << "it_x->first : " << it_x->first << ", it_x->second : " << it_x->second << std::endl;
+
+	std::cout << "Count" << std::endl;
+
+	std::cout << "z" << std::endl;
+
+	if (map1.count('z'))
+		std::cout << "z is an element of map1" << std::endl;
+	else
+		std::cout << "z is not an element of map1" << std::endl;
+
+	std::cout << "k" << std::endl;
+
+	if (map1.count('k'))
+		std::cout << "k is an element of map1" << std::endl;
+	else
+		std::cout << "k is not an element of map1" << std::endl;
+
+	std::cout << "Lower/Upper bound" << std::endl;
+
+	iterator lower_it = map1.lower_bound('p');
+	iterator upper_it = map1.upper_bound('a');
+
+	std::cout << "p : first -> " << lower_it->first << ", second -> " << lower_it->second << std::endl;
+	std::cout << "a : first -> " << upper_it->first << ", second -> " << upper_it->second << std::endl;
+
+	std::cout << "Equal range" << std::endl;
+
+	ft::pair<iterator, iterator> ERpair = map1.equal_range('x');
+
+	std::cout << "ERpair.first : first -> " << ERpair.first->first << ", second -> " << ERpair.first->second << std::endl;
+	std::cout << "ERpair.second : second -> " << ERpair.second->first << ", second -> " << ERpair.second->second << std::endl;
 
 }
 
