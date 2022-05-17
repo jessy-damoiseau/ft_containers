@@ -222,7 +222,7 @@ void check_vector(){
 	std::cout << "Use erase" << std::endl;
 
 	std::cout << "Erase 55" << std::endl;
-	vec2.erase(vec2.begin() + 12);
+	vec2.erase(vec2.begin() + 11);
 
 	std::cout << "vector 2:" << std::endl;
 	std::cout << "Capacity -> " << vec2.capacity() << ", Size -> " << vec2.size() << std::endl;
@@ -498,9 +498,9 @@ void check_map(){
 		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
 	std::cout << std::endl;
 
-	std::cout << "Erase map1.begin() + 3 to map1.end()" << std::endl;
+	/*std::cout << "Erase map1.begin() + 3 to map1.end()" << std::endl;
 	iterator b3 = map1.begin();
-	map1.erase(++b3, map1.end());
+	map1.erase(++b3, map1.end());*/
 
 	std::cout << "Map 1:" << std::endl;
 	std::cout << "Size -> " << map1.size() << std::endl;
@@ -567,9 +567,9 @@ void check_map(){
 
 	std::cout << "Find x" << std::endl;
 
-	iterator it_x = map1.find('x');
+	/*iterator it_x = map1.find('x');
 
-	std::cout << "it_x->first : " << it_x->first << ", it_x->second : " << it_x->second << std::endl;
+	std::cout << "it_x->first : " << it_x->first << ", it_x->second : " << it_x->second << std::endl;*/
 
 	std::cout << "Count" << std::endl;
 
@@ -595,12 +595,12 @@ void check_map(){
 	std::cout << "p : first -> " << lower_it->first << ", second -> " << lower_it->second << std::endl;
 	std::cout << "a : first -> " << upper_it->first << ", second -> " << upper_it->second << std::endl;
 
-	std::cout << "Equal range" << std::endl;
+	/*std::cout << "Equal range" << std::endl;
 
 	ft::pair<iterator, iterator> ERpair = map1.equal_range('x');
 
 	std::cout << "ERpair.first : first -> " << ERpair.first->first << ", second -> " << ERpair.first->second << std::endl;
-	std::cout << "ERpair.second : second -> " << ERpair.second->first << ", second -> " << ERpair.second->second << std::endl;
+	std::cout << "ERpair.second : second -> " << ERpair.second->first << ", second -> " << ERpair.second->second << std::endl;*/
 
 }
 

@@ -9,10 +9,10 @@
 #include "ft_RevIter.hpp"
 #include <memory>
 
-namespace ft{
+namespace ft {
 
 	template<class T, class Compare = std::less<typename T::first_type>, class Allocator = std::allocator<T> >
-	class SubMap{
+	class SubMap {
 		public:
 			typedef T                                       value_type;
 			typedef Compare                                 key_compare;
@@ -37,8 +37,7 @@ namespace ft{
 			SubMap(const SubMap &inst) : _Stock(0), _Size(inst._Size), _Comp(inst._Comp){ insert(inst.begin(), inst.end()); }
 			virtual ~SubMap() { clear(); }
 
-			SubMap  &operator=(const SubMap &inst)
-					{ _Stock = inst._Stock; _Size = inst._Size; _Comp = inst._Comp; _Alloc = inst._Alloc; return (*this); }
+			SubMap  &operator=(const SubMap &inst) { _Stock = inst._Stock; _Size = inst._Size; _Comp = inst._Comp; _Alloc = inst._Alloc; return (*this); }
 
 			size_type       size() const { return _Size; }
 			size_type       max_size() const { return _Alloc.max_size(); }
@@ -48,7 +47,7 @@ namespace ft{
 				_Size = 0;
 			}
 
-			void            erase(iterator position){
+			void            erase(iterator position) {
 				if (position == end() || !_Size)
 					return ;
 				tree_pointer supp = searchFind(position->first);

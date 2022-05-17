@@ -16,7 +16,8 @@ HEADERS		= 	header
 #                               Sources filenames                              #
 ################################################################################
 
-SRCS		=	main.cpp
+SRCS		=	main_std.cpp
+
 
 ################################################################################
 #                              Commands and arguments                          #
@@ -77,7 +78,13 @@ fclean: clean
 
 re:	fclean all
 
+script:
+	sh script_FtToStd.sh
+
+clean_script:
+	$(RM) srcs/main_std.cpp
+
 .SILENT:
 		all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus script
