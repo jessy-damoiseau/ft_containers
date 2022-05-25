@@ -48,24 +48,11 @@ namespace ft {
 			}
 
 			void            erase(iterator position) {
-				if (position == end() || !_Size)
-					return ;
-				tree_pointer supp = searchFind(position->first);
-				if (!supp)
-					return ;
-				if (_Comp(supp->Stock.first, supp->prev->Stock.first))
-					supp->prev->left = 0;
-				else
-					supp->prev->right = 0;
-				supp->prev = 0;
-				iterator insIter = supp;
-				iterator insleft = FullLeft(supp);
-				iterator insright = FullRight(supp);
-				insright++;
-				insert(insleft, insIter);
-				insIter++;
-				insert(insIter, insright);
-				destroy_branch(supp);
+				deleteNode(position.base(), position.base()->Stock.first);
+				_Size--;
+				//updateBalance(FullLeft(_Stock));
+				//updateBalance(FullRight(_Stock));
+
 			}
 			size_type       erase(const key_type &k){
 				iterator it = find(k);
@@ -76,8 +63,11 @@ namespace ft {
 				return (0);
 			}
 			void            erase(iterator first, iterator last){
-				for (; first != last; first++)
-					erase(first);
+				for(; first != last;) {
+					iterator tmp = first;
+					first++;
+					erase(tmp);
+				}
 			}
 
 			iterator        find(const key_type &k) {
@@ -124,23 +114,125 @@ namespace ft {
 			tree_alloc      _Alloc;
 			key_compare     _Comp;
 
+			void leftRotate(tree_pointer x){
+				tree_pointer y = x->right;
+				x->right = y->left;
+				if (y->left != 0)
+					y->left->prev = x;
+				y->prev = x->prev;
+				if (x->prev == 0)
+					this->_Stock = y;
+				else if (x == x->prev->left)
+					x->prev->left = y;
+				else
+					x->prev->right = y;
+				y->left = x;
+				x->prev = y;
+				x->bf = x->bf - 1 - ft::max(0, y->bf);
+				y->bf = y->bf - 1 + ft::min(0, x->bf);
+			}
+			void rightRotate(tree_pointer x){
+			tree_pointer y = x->left;
+			x->left = y->right;
+			if (y->right != 0)
+				y->right->prev = x;
+			y->prev = x->prev;
+			if (x->prev == 0)
+				this->_Stock = y;
+			else if (x == x->prev->right)
+				x->prev->right = y;
+			else
+				x->prev->left = y;
+			y->right = x;
+			x->prev = y;
+			x->bf = x->bf - 1 - ft::max(0, y->bf);
+			y->bf = y->bf - 1 + ft::min(0, x->bf);
+		}
+			void rebalance(tree_pointer node) {
+				if (node->bf > 0){
+					if (node->right->bf < 0) {
+						rightRotate(node->right);
+						leftRotate(node);
+					}else
+						leftRotate(node);
+				}
+				else if (node->bf < 0) {
+					if (node->left->bf > 0) {
+						leftRotate(node->left);
+						rightRotate(node);
+					}else
+						rightRotate(node);
+				}
+			}
+			void updateBalance(tree_pointer node) {
+				if (node->bf < -1 || node->bf > 1) {
+					rebalance(node);
+					return;
+				}
+				if (node->prev != 0){
+					if (node == node->prev->left)
+						node->prev->bf -= 1;
+					if (node == node->prev->right)
+						node->prev->bf += 1;
+					if (node->prev->bf != 0)
+						updateBalance(node->prev);
+				}
+			}
+
+			tree_pointer deleteNode(tree_pointer node, key_type key){
+				if (node == 0)
+					return node;
+				else if (key < node->Stock.first) node->left = deleteNode(node->left, key);
+				else if (key > node->Stock.first) node->right = deleteNode(node->right, key);
+				else {
+					if (node->left == 0 && node->right == 0) {
+						_Alloc.destroy(node);
+						node = 0;
+					}
+					else if (node->left == 0) {
+						tree_pointer tmp = node;
+						node = node->right;
+						_Alloc.destroy(tmp);
+					}
+					else if (node->right == 0) {
+						tree_pointer tmp = node;
+						node = node->left;
+						_Alloc.destroy(tmp);
+					}
+					else {
+						tree_pointer tmp = minimum(node->right);
+						node->Stock = tmp->Stock;
+						node->right = deleteNode(node->right, tmp->Stock.first);
+					}
+				}
+				//updateBalance(node);
+				return node;
+			}
+
+			tree_pointer minimum(tree_pointer node){
+				while (node->left != 0)
+					node = node->left;
+				return node;
+			}
+
+
 		protected:
-			void                        destroy_branch(tree_pointer supp){
+			void                        destroy_branch(tree_pointer &supp){
 				if (supp){
 					destroy_branch(supp->left);
 					destroy_branch(supp->right);
 					_Alloc.destroy(supp);
 					_Alloc.deallocate(supp, 1);
-					_Size--;
 					supp = 0;
 				}
 			}
+
 			ft::pair<iterator, bool>    func_insert(tree_pointer stock, const value_type &value) {
 				if (!_Stock){
 					_Stock = _Alloc.allocate(1);
 					_Alloc.construct(_Stock, tree(value));
 					_Size++;
-					return (ft::pair<iterator, bool>(iterator(_Stock), true));
+					return (ft::make_pair(iterator(_Stock), true));
 				}
 				tree_pointer tmp = stock;
 				tree_pointer tmpPrev = 0;
@@ -161,6 +253,7 @@ namespace ft {
 				else
 					tmpPrev->right = tmp;
 				tmp->prev = tmpPrev;
+				updateBalance(tmp);
 				return ( ft::pair<iterator, bool>(iterator(tmp), true));
 			}
 			tree_pointer                FullLeft(tree_pointer x) const{

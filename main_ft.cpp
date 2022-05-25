@@ -2,12 +2,12 @@
 
 #include <iostream>
 #include <exception>
-#include "../header/ft_Stack.hpp"
-#include "../header/ft_Vector.hpp"
-#include "../header/ft_Map.hpp"
-#include "../header/ft_Pair.hpp"
+#include "stack.hpp"
+#include "vector.hpp"
+#include "map.hpp"
+#include "ft_Pair.hpp"
 
-
+/*
 void check_vector(){
 	typedef ft::vector<int>::iterator iterator;
 	typedef ft::vector<int>::reverse_iterator reverse_iterator;
@@ -498,9 +498,9 @@ void check_map(){
 		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
 	std::cout << std::endl;
 
-	/*std::cout << "Erase map1.begin() + 3 to map1.end()" << std::endl;
+	std::cout << "Erase map1.begin() + 3 to map1.end()" << std::endl;
 	iterator b3 = map1.begin();
-	map1.erase(++b3, map1.end());*/
+	map1.erase(++b3, map1.end());
 
 	std::cout << "Map 1:" << std::endl;
 	std::cout << "Size -> " << map1.size() << std::endl;
@@ -567,9 +567,9 @@ void check_map(){
 
 	std::cout << "Find x" << std::endl;
 
-	/*iterator it_x = map1.find('x');
+	iterator it_x = map1.find('x');
 
-	std::cout << "it_x->first : " << it_x->first << ", it_x->second : " << it_x->second << std::endl;*/
+	std::cout << "it_x->first : " << it_x->first << ", it_x->second : " << it_x->second << std::endl;
 
 	std::cout << "Count" << std::endl;
 
@@ -580,27 +580,27 @@ void check_map(){
 	else
 		std::cout << "z is not an element of map1" << std::endl;
 
-	std::cout << "k" << std::endl;
+	std::cout << "w" << std::endl;
 
-	if (map1.count('k'))
-		std::cout << "k is an element of map1" << std::endl;
+	if (map1.count('w'))
+		std::cout << "w is an element of map1" << std::endl;
 	else
-		std::cout << "k is not an element of map1" << std::endl;
+		std::cout << "w is not an element of map1" << std::endl;
 
 	std::cout << "Lower/Upper bound" << std::endl;
 
-	iterator lower_it = map1.lower_bound('p');
+	iterator lower_it = map1.lower_bound('w');
 	iterator upper_it = map1.upper_bound('a');
 
-	std::cout << "p : first -> " << lower_it->first << ", second -> " << lower_it->second << std::endl;
+	std::cout << "w : first -> " << lower_it->first << ", second -> " << lower_it->second << std::endl;
 	std::cout << "a : first -> " << upper_it->first << ", second -> " << upper_it->second << std::endl;
 
-	/*std::cout << "Equal range" << std::endl;
+	std::cout << "Equal range" << std::endl;
 
-	ft::pair<iterator, iterator> ERpair = map1.equal_range('x');
+	ft::pair<iterator, iterator> ERpair = map1.equal_range('d');
 
 	std::cout << "ERpair.first : first -> " << ERpair.first->first << ", second -> " << ERpair.first->second << std::endl;
-	std::cout << "ERpair.second : second -> " << ERpair.second->first << ", second -> " << ERpair.second->second << std::endl;*/
+	std::cout << "ERpair.second : second -> " << ERpair.second->first << ", second -> " << ERpair.second->second << std::endl;
 
 }
 
@@ -611,3 +611,55 @@ int main(){
 
 	return 0;
 }
+*/
+
+
+#include <list>
+#include "common.hpp"
+
+#define T1 float
+#define T2 foo<int>
+typedef _pair<const T1, T2> T3;
+
+int		main(void)
+{
+	std::list<T3> lst;
+	unsigned int lst_size = 5;
+	for (unsigned int i = 0; i < lst_size; ++i)
+		lst.push_back(T3(2.5 - i, (i + 1) * 7));
+
+	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
+	TESTED_NAMESPACE::map<T1, T2>::reverse_iterator it(mp.rbegin());
+	TESTED_NAMESPACE::map<T1, T2>::const_reverse_iterator ite(mp.rbegin());
+	printSize(mp);
+
+	printPair(++ite);
+	printPair(ite++);
+	printPair(ite++);
+	printPair(++ite);
+
+	it->second.m();
+	ite->second.m();
+
+	printPair(++it);
+	printPair(it++);
+	printPair(it++);
+	printPair(++it);
+
+	printPair(--ite);
+	printPair(ite--);
+	printPair(--ite);
+	printPair(ite--);
+
+	(*it).second.m();
+	(*ite).second.m();
+
+	printPair(--it);
+	printPair(it--);
+	printPair(it--);
+	printPair(--it);
+
+	return (0);
+}
+
+

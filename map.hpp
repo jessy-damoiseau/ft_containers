@@ -12,13 +12,13 @@
 namespace ft
 {
 	template <  class Key, class T, class Compare = ft::less<Key>,
-				class Alloc = std::allocator<ft::pair<const Key, T> > >
+				class Alloc = std::allocator<ft::pair<const Key, T > > >
 	class map
 	{
 		public:
 			typedef Key														key_type;
 			typedef T														mapped_type;
-			typedef ft::pair<const key_type, mapped_type>					value_type;
+			typedef ft::pair< key_type, mapped_type>					    value_type;
 			typedef Compare													key_compare;
 			typedef Alloc													allocator_type;
 			typedef typename allocator_type::reference						reference;
@@ -55,7 +55,11 @@ namespace ft
 						_Stock.insert(first, last);
 					}
 
-					map(const map &x) : _Stock(x._Stock), _Alloc(x._Alloc), _Comp(x._Comp){}
+					map(const map &x) {
+						_Alloc = x.get_allocator();
+						_Stock.insert(x.begin(), x.end());
+
+					}
 					~map(){}
 
 					iterator                begin() { return (_Stock.begin()); }
@@ -112,8 +116,8 @@ namespace ft
 						return (it);
 					}
 					const_iterator  lower_bound(const key_type &k) const {
-						iterator it = begin();
-						iterator ite = end();
+						const_iterator it = begin();
+						const_iterator ite = end();
 						while (it != ite) {
 							if (!_Comp(it->first, k))
 								break;
@@ -125,24 +129,21 @@ namespace ft
 						iterator it = begin();
 						iterator ite = end();
 						while (it != ite) {
-							if (!_Comp(it->first, k))
+							if (_Comp(k, it->first))
 								break;
 							it++;
 						}
-						if (it != ite)
-							it++;
 						return (it);
 					}
+
 					const_iterator  upper_bound(const key_type &k) const {
-						iterator it = begin();
-						iterator ite = end();
+						const_iterator it = begin();
+						const_iterator ite = end();
 						while (it != ite) {
-							if (!_Comp(it->first, k))
+							if (_Comp(k, it->first))
 								break;
 							it++;
 						}
-						if (it != ite)
-							it++;
 						return (it);
 					}
 
@@ -191,7 +192,9 @@ namespace ft
 					}
 
 					void erase(iterator first, iterator last){
+						std::cout << "Erase_CHECK_begin" << std::endl;
 						_Stock.erase(first, last);
+						std::cout << "Erase_CHECK_end" << std::endl;
 					}
 
 				private:
@@ -201,6 +204,33 @@ namespace ft
 
 
 	};
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	bool operator==(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs) {
+		typename ft::map<Key, T, Compare, Allocator>::const_iterator	it = lhs.begin();
+		typename ft::map<Key, T, Compare, Allocator>::const_iterator	ite = lhs.end();
+		typename ft::map<Key, T, Compare, Allocator>::const_iterator	it2 = rhs.begin();
+
+		while (it != ite && it2 != rhs.end())
+		{
+			if (it->first != it2->first || it->second != it2->second)
+				return (false);
+			it++;
+			it2++;
+		}
+		return (it == ite && it2 == rhs.end());
+	}
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	bool operator!=(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs) { return (!(lhs == rhs)); }
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	bool operator<(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs) { return ( ft::lexicographical_compare(lhs.begin(), lhs.end(), rhs.begin(), rhs.end()) ); }
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	bool operator>(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs) { return (rhs < lhs); }
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	bool operator<=(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs) { return (!(rhs < lhs)); }
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	bool operator>=(const map<Key, T, Compare, Allocator> &lhs, const map<Key, T, Compare, Allocator> &rhs) { return (!(lhs < rhs)); }
+	template <typename Key, typename T, typename Compare, typename Allocator>
+	void swap(map<Key, T, Compare, Allocator> &lhs, map<Key, T, Compare, Allocator> &rhs) { lhs.swap(rhs); }
 }
 
 #endif
