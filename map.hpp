@@ -175,8 +175,6 @@ namespace ft
 
 					void swap(map &x){
 						_Stock.swap(x._Stock);
-						ft::swap(_Comp, x._Comp);
-						ft::swap(_Alloc, x._Alloc);
 					}
 
 					void clear() {
@@ -192,9 +190,7 @@ namespace ft
 					}
 
 					void erase(iterator first, iterator last){
-						std::cout << "Erase_CHECK_begin" << std::endl;
 						_Stock.erase(first, last);
-						std::cout << "Erase_CHECK_end" << std::endl;
 					}
 
 				private:

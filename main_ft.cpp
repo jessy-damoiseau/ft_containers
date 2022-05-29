@@ -617,49 +617,130 @@ int main(){
 #include <list>
 #include "common.hpp"
 
-#define T1 float
-#define T2 foo<int>
-typedef _pair<const T1, T2> T3;
+#ifndef STD
+# define NAMESPACE ft
+#else
+# define NAMESPACE std
+#endif
 
-int		main(void)
+using namespace NAMESPACE;
+using namespace std;
+
+template <class Key, class T>
+void	print(map<Key, T>& lst)
 {
-	std::list<T3> lst;
-	unsigned int lst_size = 5;
-	for (unsigned int i = 0; i < lst_size; ++i)
-		lst.push_back(T3(2.5 - i, (i + 1) * 7));
-
-	TESTED_NAMESPACE::map<T1, T2> mp(lst.begin(), lst.end());
-	TESTED_NAMESPACE::map<T1, T2>::reverse_iterator it(mp.rbegin());
-	TESTED_NAMESPACE::map<T1, T2>::const_reverse_iterator ite(mp.rbegin());
-	printSize(mp);
-
-	printPair(++ite);
-	printPair(ite++);
-	printPair(ite++);
-	printPair(++ite);
-
-	it->second.m();
-	ite->second.m();
-
-	printPair(++it);
-	printPair(it++);
-	printPair(it++);
-	printPair(++it);
-
-	printPair(--ite);
-	printPair(ite--);
-	printPair(--ite);
-	printPair(ite--);
-
-	(*it).second.m();
-	(*ite).second.m();
-
-	printPair(--it);
-	printPair(it--);
-	printPair(it--);
-	printPair(--it);
-
-	return (0);
+	for (typename map<Key, T>::iterator it = lst.begin(); it != lst.end(); it++)
+		cout << it->first << " => " << it->second << '\n';
 }
+
+int main ()
+{
+  map<char,int> foo,bar;
+
+  foo['x']=100;
+  foo['y']=200;
+
+  bar['a']=11;
+  bar['b']=22;
+  bar['c']=33;
+
+
+  map<char, int>::const_iterator tmp = foo.begin(); //tmp iterates through foo
+  map<char, int>::const_iterator tmp2 = bar.begin(); //tmp2 iterates through bar
+
+  swap(bar, foo); //tmp iterates through bar
+				//tmp2 iterates through foo
+
+
+  map<char, int>	other;
+
+  other['1'] = 73;
+  other['2'] = 173;
+  other['3'] = 763;
+  other['4'] = 73854;
+  other['5'] = 74683;
+  other['6'] = 753;
+
+  map<char, int>::const_iterator tmp3 = other.begin(); // tmp3 iterates through other
+
+  cout << "foo contains:\n";
+  for (map<char,int>::iterator it=foo.begin(); it!=foo.end(); ++it)
+    cout << it->first << " => " << it->second << '\n';
+
+  cout << "bar contains:\n";
+  for (map<char,int>::iterator it=bar.begin(); it!=bar.end(); ++it)
+    cout << it->first << " => " << it->second << '\n';
+
+	while(tmp != bar.end())
+	{
+		cout << tmp->first << " => " << tmp->second << '\n';
+		tmp++;
+	}
+	tmp--;
+
+	while(tmp2 != foo.end())
+	{
+		cout << tmp2->first << " => " << tmp2->second << '\n';
+		tmp2++;
+	}
+	tmp2--;
+	swap(other, foo); //tmp2 iterates through other
+					//tmp3 iterates throught foo
+	print(other);
+	print(foo);
+	print(bar);
+	std::cout << "check" << std::endl;
+	while(tmp != bar.begin())
+	{
+		std::cout << "check1" << std::endl;
+		cout << tmp->first << " => " << tmp->second << '\n';
+		std::cout << "check2" << std::endl;
+		tmp--;
+	}
+	cout << tmp->first << " => " << tmp->second << '\n';
+
+	while(tmp2 != other.begin())
+	{
+		cout << tmp2->first << " => " << tmp2->second << '\n';
+		tmp2--;
+	}
+	cout << tmp2->first << " => " << tmp2->second << '\n';
+
+	while(tmp3 != foo.end())
+	{
+		cout << tmp3->first << " => " << tmp3->second << '\n';
+		tmp3++;
+	}
+	tmp3--;
+
+	swap(bar, foo);
+	swap(foo, bar);
+	swap(bar, foo); //tmp3 iterates through bar
+				//tmp iterates through foo
+
+	print(other);
+	print(foo);
+	print(bar);
+
+	while(tmp != foo.end())
+	{
+		cout << tmp->first << " => " << tmp->second << '\n';
+		tmp++;
+	}
+
+	while(tmp2 != other.end())
+	{
+		cout << tmp2->first << " => " << tmp2->second << '\n';
+		tmp2++;
+	}
+
+	while(tmp3 != bar.begin())
+	{
+		cout << tmp3->first << " => " << tmp3->second << '\n';
+		tmp3--;
+	}
+	cout << tmp3->first << " => " << tmp3->second << '\n';
+}
+
 
 
