@@ -42,16 +42,12 @@ namespace ft {
 
 		map_iterator	&operator++()
 		{
-			if (_Ptr != NULL)
-			{
-				if (_Ptr->right)
-				{
+			if (_Ptr != NULL) {
+				if (_Ptr->right) {
 					_Ptr = _Ptr->right;
 					while (_Ptr->left)
 						_Ptr = _Ptr->left;
-				}
-				else
-				{
+				} else {
 					while (_Ptr->prev && _Ptr->prev->right == _Ptr)
 						_Ptr = _Ptr->prev;
 					_Ptr = _Ptr->prev;
@@ -87,6 +83,7 @@ namespace ft {
 			}
 			else
 				_Ptr = _parent;
+
 			return ( *this );
 		}
 
