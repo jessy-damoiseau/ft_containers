@@ -1,8 +1,9 @@
-#ifndef FT_MAPITER_HPP
-# define FT_MAPITER_HPP
+#ifndef MAPITER_HPP
+#define MAPITER_HPP
 
-# include "ft_TreeStruct.hpp"
-# include "ft_Iter.hpp"
+#include <cstddef>
+#include "ft_Iter.hpp"
+#include "BST_AVL.hpp"
 
 namespace ft {
 	template<typename T>
@@ -19,26 +20,23 @@ namespace ft {
 
 		map_iterator() : _Ptr(0) {}
 		map_iterator(ptr Ptr) : _Ptr(Ptr) {}
-		map_iterator(ptr Ptr, ptr parent) : _Ptr(Ptr), _parent(parent) {}
 
 
-		map_iterator(const map_iterator &src) : _Ptr(src._Ptr), _parent(src._parent) {}
+		map_iterator(const map_iterator &src) : _Ptr(src._Ptr) {}
 
 
 		map_iterator	&operator=(const map_iterator &rhs)
 		{
 			if (*this != rhs)
 				_Ptr = rhs._Ptr;
-			_parent = rhs._parent;
 			return ( *this );
 		}
 
 		virtual ~map_iterator() {}
 
-		reference	operator*( void ) const { return ( _Ptr->Stock ); }
+		reference	operator*( void ) const { return ( _Ptr->data ); }
 		pointer	operator->( void ) const { return ( &( operator*() ) );}
 		ptr	base() const { return ( _Ptr ); }
-		ptr	pbase() const { return (_parent); }
 
 		map_iterator	&operator++()
 		{
@@ -48,9 +46,9 @@ namespace ft {
 					while (_Ptr->left)
 						_Ptr = _Ptr->left;
 				} else {
-					while (_Ptr->prev && _Ptr->prev->right == _Ptr)
-						_Ptr = _Ptr->prev;
-					_Ptr = _Ptr->prev;
+					while (_Ptr->parent && _Ptr->parent->right == _Ptr)
+						_Ptr = _Ptr->parent;
+					_Ptr = _Ptr->parent;
 				}
 			}
 			return ( *this );
@@ -67,7 +65,6 @@ namespace ft {
 		{
 			if (_Ptr != NULL)
 			{
-				_parent = _Ptr;
 				if (_Ptr->left)
 				{
 					_Ptr = _Ptr->left;
@@ -76,14 +73,11 @@ namespace ft {
 				}
 				else
 				{
-					while (_Ptr->prev && _Ptr->prev->left == _Ptr)
-						_Ptr = _Ptr->prev;
-					_Ptr = _Ptr->prev;
+					while (_Ptr->parent && _Ptr->parent->left == _Ptr)
+						_Ptr = _Ptr->parent;
+					_Ptr = _Ptr->parent;
 				}
 			}
-			else
-				_Ptr = _parent;
-
 			return ( *this );
 		}
 
@@ -99,7 +93,6 @@ namespace ft {
 
 	private:
 		ptr	_Ptr;
-		ptr	_parent;
 	};
 
 
@@ -117,27 +110,24 @@ namespace ft {
 
 		map_const_iterator() : _Ptr(0) {}
 		map_const_iterator(ptr Ptr) : _Ptr(Ptr) {}
-		map_const_iterator(ptr Ptr, ptr parent) : _Ptr(Ptr), _parent(parent) {}
 
 		template<class U>
-		map_const_iterator(const U &src) : _Ptr(src.base()), _parent(src.pbase()) {}
-		map_const_iterator(const map_const_iterator &src) : _Ptr(src._Ptr), _parent(src._parent) {}
+		map_const_iterator(const U &src) : _Ptr(src.base()) {}
+		map_const_iterator(const map_const_iterator &src) : _Ptr(src._Ptr) {}
 
 
 		map_const_iterator	&operator=(const map_const_iterator &rhs)
 		{
 			if (*this != rhs)
-				_Ptr = rhs._Ptr;
-			_parent = rhs._parent;
+				_Ptr = rhs._Ptr;;
 			return ( *this );
 		}
 
 		virtual ~map_const_iterator() {}
 
-		reference	operator*( void ) const { return ( _Ptr->Stock ); }
+		reference	operator*( void ) const { return ( _Ptr->data ); }
 		pointer	operator->( void ) const { return ( &( operator*() ) );}
 		ptr	base() const { return ( _Ptr ); }
-		ptr	pbase() const { return (_parent); }
 
 		map_const_iterator	&operator++()
 		{
@@ -151,9 +141,9 @@ namespace ft {
 				}
 				else
 				{
-					while (_Ptr->prev && _Ptr->prev->right == _Ptr)
-						_Ptr = _Ptr->prev;
-					_Ptr = _Ptr->prev;
+					while (_Ptr->parent && _Ptr->parent->right == _Ptr)
+						_Ptr = _Ptr->parent;
+					_Ptr = _Ptr->parent;
 				}
 			}
 			return ( *this );
@@ -170,7 +160,6 @@ namespace ft {
 		{
 			if (_Ptr != NULL)
 			{
-				_parent = _Ptr;
 				if (_Ptr->left)
 				{
 					_Ptr = _Ptr->left;
@@ -179,13 +168,11 @@ namespace ft {
 				}
 				else
 				{
-					while (_Ptr->prev && _Ptr->prev->left == _Ptr)
-						_Ptr = _Ptr->prev;
-					_Ptr = _Ptr->prev;
+					while (_Ptr->parent && _Ptr->parent->left == _Ptr)
+						_Ptr = _Ptr->parent;
+					_Ptr = _Ptr->parent;
 				}
 			}
-			else
-				_Ptr = _parent;
 			return ( *this );
 		}
 
@@ -201,10 +188,7 @@ namespace ft {
 
 	private:
 		ptr	_Ptr;
-		ptr	_parent;
 	};
-
-
 }
 
 #endif
