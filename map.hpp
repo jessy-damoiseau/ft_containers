@@ -75,13 +75,14 @@ namespace ft {
 			}
 			mapped_type		&operator[](const key_type &key) {
 				iterator it = _Bst.nodeSearch(key);
-				if (it == end())
-					it = insert(ft::make_pair(key, mapped_type())).first;
+				if (it == end()) {
+                    it = insert(ft::make_pair(key, mapped_type())).first;
+                }
 				return (it->second);
 			}
 
-			iterator        find(const key_type &k) { return (iterator(_Bst.find(k))); }
-			const_iterator  find(const key_type &k) const { return (const_iterator(_Bst.find(k))); }
+			iterator        find(const key_type &k) { return (iterator(_Bst.nodeSearch(k))); }
+			const_iterator  find(const key_type &k) const { return (const_iterator(_Bst.nodeSearch(k))); }
 			size_type		count(const key_type &k) const {
 				const_iterator check = find(k);
 				if (check != end())
@@ -143,18 +144,20 @@ namespace ft {
 			template<class InputIterator>
 			void	insert(InputIterator first, InputIterator last,
 						   typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0) {
-				for(; first != last; first++)
+                for(; first != last; first++)
 					insert(*first);
 			}
 
-			ft::pair<iterator, bool>	insert(const value_type &val) { return (_Bst.insert(val)); }
+			ft::pair<iterator, bool>	insert(const value_type &val) {
+                return (_Bst.insert(val));
+            }
 			iterator					insert(iterator position, const value_type &val) {
 				(void)position;
 				return (_Bst.insert(val).first);
 			}
 
 			void		erase(iterator position) {
-				_Bst.erase(position);
+				erase(position->first);
 			}
 			size_type 	erase(const key_type &k) {
 				iterator it = find(k);

@@ -4,6 +4,7 @@
 #include <memory>
 #include "ft_Utility.hpp"
 #include "ft_RevIter.hpp"
+#include "ft_Integral.hpp"
 #include "mapIter.hpp"
 
 namespace ft {
@@ -59,15 +60,18 @@ namespace ft {
 				_Root = last;
 			}
 			BST_AVL(const BST_AVL &inst) : _Root(0), _Size(0), _Comp(inst._Comp) { insert(inst.begin(), inst.end()); }
-			virtual ~BST_AVL() { clear(); }
+			virtual ~BST_AVL() {
+                clear();
+                _Alloc.destroy(_Root);
+                _Alloc.deallocate(_Root, 1);
+                _Root = 0;
+            }
 
 			BST_AVL	&operator=(const BST_AVL &inst) {
-				if (*this != inst){
 					clear();
 					_Comp = inst._Comp;
 					_Size = 0;
-					insert(inst.begin(), inst.end());
-				}
+                    insert(inst.begin(), inst.end());
 				return (*this);
 			}
 
@@ -75,7 +79,10 @@ namespace ft {
 			size_type max_size() const { return (_Alloc.max_size()); }
 
 			void	clear() {
+                nodePtr last = clear_lastNode();
 				destroy(_Root);
+                insert_lastNode(last);
+                std::cout << "Size -> " << _Size << std::endl;
 				_Size = 0;
 			}
 			void	swap(BST_AVL &x) {
@@ -86,12 +93,12 @@ namespace ft {
 			}
 
 			void						erase(iterator position){
-				nodePtr last = clear_lastNode();
-				deleteNode(position.base(), position->first);
-				_Size--;
-				updateBalance(nodeLeft(_Root));
-				updateBalance(nodeRight(_Root));
-				insert_lastNode(last);
+                    deleteNode(position, position.base());
+                    _Size--;
+                    //nodePtr last = clear_lastNode();
+                   // updateBalance(nodeLeft(_Root));
+                    //updateBalance(nodeRight(_Root));
+                    //insert_lastNode(last);
 			}
 			ft::pair<iterator, bool>    insert(const value_type &val){
 				nodePtr last = clear_lastNode();
@@ -100,17 +107,27 @@ namespace ft {
 				return (ret);
 			}
 
+            template<class InputIterator>
+            void                        insert(InputIterator first, InputIterator last, typename ft::enable_if<!ft::is_integral<InputIterator>::value, void**>::type = 0){
+                for(; first != last; first++){
+                    insert(*first);
+                }
+            }
+
 			nodePtr 				nodeSearch(const key_type &k) const {
 				nodePtr ret = _Root;
-				while (ret){
-					if (ret->data.first == k)
-						return (ret);
-					else if (k < ret->data.first)
-						ret = ret->left;
-					else
-						ret = ret->right;
+				while (ret && !ret->last){
+					if (ret->data.first == k) {
+                        return (ret);
+                    }
+					else if (k < ret->data.first) {
+                        ret = ret->left;
+                    }
+					else {
+                        ret = ret->right;
+                    }
 				}
-				return (0);
+				return (end().base());
 			}
 
 			iterator				begin() { return (iterator(nodeLeft(_Root))); }
@@ -139,63 +156,112 @@ namespace ft {
 					destroy(supp->right);
 					_Alloc.destroy(supp);
 					_Alloc.deallocate(supp, 1);
-					supp = 0;
 				}
+                supp = 0;
 			}
 
 			ft::pair<iterator, bool>	insertNode(const value_type &value) {
-				nodePtr node = create(value);
-				nodePtr y = 0;
-				nodePtr x = _Root;
-				while (x != 0) {
-					y = x;
-					if (_Comp(value.first, x->data.first))
-						x = x->left;
-					else if (_Comp(x->data.first, value.first))
-						x = x->right;
-					else
-						return ( ft::pair<iterator, bool>(iterator(x), false));
-				}
-				node->parent = y;
-				if (y == 0)
-					_Root = node;
-				else if (node->data < y->data)
-					y->left = node;
-				else
-					y->right = node;
-				updateBalance(node);
-				_Size++;
-				return ( ft::pair<iterator, bool>(iterator(node), true));
+                nodePtr node = create(value);
+                if (!_Root){
+                    _Root = node;
+                    _Size++;
+                    return (ft::make_pair(iterator(_Root), true));
+                }
+                nodePtr tmp = _Root;
+                nodePtr tmpPrev = 0;
+                while (tmp){
+                    tmpPrev = tmp;
+                    if (_Comp(value.first, tmp->data.first))
+                        tmp = tmp->left;
+                    else if (_Comp(tmp->data.first, value.first))
+                        tmp = tmp->right;
+                    else
+                        return ( ft::pair<iterator, bool>(iterator(tmp), false));
+                }
+                _Size++;
+                if (_Comp(value.first, tmpPrev->data.first))
+                    tmpPrev->left = node;
+                else
+                    tmpPrev->right = node;
+                node->parent = tmpPrev;
+                return ( ft::pair<iterator, bool>(iterator(node), true));
 			}
-			nodePtr						deleteNode(nodePtr node, key_type key) {
-				if (node == 0) return node;
-				else if (key < node->data) node->left = deleteNode(node->left, key);
-				else if (key > node->data) node->right = deleteNode(node->right, key);
-				else {
-					if (node->left == 0 && node->right == 0) {
-						_Alloc.destroy(node);
-						_Alloc.deallocate(node, 1);
-						node = 0;
-					}
-					else if (node->left == 0) {
-						nodePtr temp = node;
-						node = node->right;
-						_Alloc.destroy(temp);
-						_Alloc.deallocate(temp, 1);
-					}
-					else if (node->right == 0) {
-						nodePtr temp = node;
-						node = node->left;
-						_Alloc.destroy(temp);
-						_Alloc.deallocate(temp, 1);
-					}
-					else {
-						nodePtr temp = nodeLeft(node->right);
-						node->data = temp->data;
-						node->right = deleteNode(node->right, temp->data);
-					}
-				}
-				return node;
+			void						deleteNode(iterator position, nodePtr del) {
+                if (position == end() || !_Size )
+                    return ;
+                if (!del->last) {
+                    if (del && del->left && del->right)
+                    {
+                        nodePtr tmp = nodeLeft(del->right);
+                        del->data = tmp->data;
+                        if (tmp->right)
+                        {
+                            tmp->right->parent = del;
+                            del->right = tmp->right;
+                        }
+                        else if (tmp->left)
+                        {
+                            tmp->left->parent = del;
+                            del->left = tmp->left;
+                        }
+                        if (!tmp->right && !tmp->left)
+                        {
+                            if (tmp->parent->right == tmp)
+                                tmp->parent->right = NULL;
+                            else if (tmp->parent->left == tmp)
+                                tmp->parent->left = NULL;
+                        }
+                        _Alloc.destroy(tmp);
+                        _Alloc.deallocate(tmp, 1);
+                    }
+                    else
+                    {
+                        nodePtr tmp = (del->left != NULL) ? del->left : del->right;
+                        if (tmp)
+                        {
+                            tmp->parent = del->parent;
+                            if (!tmp->parent)
+                            {
+                                _Alloc.destroy(del);
+                                _Alloc.deallocate(del, 1);
+                                del = tmp;
+                                _Root = tmp;
+                                return ;
+                            }
+                        }
+                        else if (del->parent)
+                        {
+                            if (del->parent->right == del)
+                                del->parent->right = NULL;
+                            if (del->parent->left == del)
+                                del->parent->left = NULL;
+                        }
+                        if (del->left)
+                        {
+                            if (del->parent->left == del)
+                                del->parent->left = tmp;
+                            else
+                                del->parent->right = tmp;
+                        }
+                        else if (del->right)
+                        {
+                            if (del->parent->right == del)
+                                del->parent->right = tmp;
+                            else
+                                del->parent->left = tmp;
+                        }
+                        if (del == _Root && !del->right && !del->left)
+                        {
+                            _Alloc.destroy(del);
+                            _Alloc.deallocate(del, 1);
+                            del = _Root = NULL;
+                            return ;
+                        }
+                        _Alloc.destroy(del);
+                        _Alloc.deallocate(del, 1);
+                        del = NULL;
+                    }
+                }
 			}
 
 			nodePtr nodeLeft(nodePtr node) const {
@@ -265,18 +331,20 @@ namespace ft {
 				}
 			}
 			void 	updateBalance(nodePtr node) {
-				if (node->bf < -1 || node->bf > 1) {
-					rebalance(node);
-					return;
-				}
-				if (node->parent != 0) {
-					if (node == node->parent->left)
-						node->parent->bf -= 1;
-					if (node == node->parent->right)
-						node->parent->bf += 1;
-					if (node->parent->bf != 0)
-						updateBalance(node->parent);
-				}
+                if (node) {
+                    if (node->bf < -1 || node->bf > 1) {
+                        rebalance(node);
+                        return;
+                    }
+                    if (node->parent != 0) {
+                        if (node == node->parent->left)
+                            node->parent->bf -= 1;
+                        if (node == node->parent->right)
+                            node->parent->bf += 1;
+                        if (node->parent->bf != 0)
+                            updateBalance(node->parent);
+                    }
+                }
 			}
 			void 	insert_lastNode(nodePtr last){
 				if (_Root) {
