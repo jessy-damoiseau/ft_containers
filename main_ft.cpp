@@ -4,15 +4,20 @@
 #include "vector.hpp"
 #include "map.hpp"
 #include "ft_Pair.hpp"
+#include <map>
+#include <vector>
+#include <stack>
 
+
+#define NAMESPACE std
 
 void check_vector(){
-	typedef ft::vector<int>::iterator iterator;
-	typedef ft::vector<int>::reverse_iterator reverse_iterator;
-	ft::vector<int> vec1(10, 100);
-	ft::vector<int> vec2(vec1);
-	ft::vector<int> vec3;
-	ft::vector<int> vec4(vec1.begin(), vec1.end());
+	typedef NAMESPACE::vector<int>::iterator iterator;
+	typedef NAMESPACE::vector<int>::reverse_iterator reverse_iterator;
+	NAMESPACE::vector<int> vec1(10, 100);
+	NAMESPACE::vector<int> vec2(vec1);
+	NAMESPACE::vector<int> vec3;
+	NAMESPACE::vector<int> vec4(vec1.begin(), vec1.end());
 	vec3 = vec4;
 	std::cout << "--------------------------------------------------" << std::endl;
 	std::cout << "|                  Check_Vector                  |" << std::endl;
@@ -185,7 +190,7 @@ void check_vector(){
 		std::cout << *it << " ";
 	std::cout << "\n" << std::endl;
 	vec1.swap(vec3);
-	std::cout << "After" << std::endl;
+	std::cout << "ANAMESPACEer" << std::endl;
 	std::cout << "vector 1:" << std::endl;
 	std::cout << "Capacity -> " << vec1.capacity() << ", Size -> " << vec1.size() << std::endl;
 	for(iterator it = vec1.begin(); it != vec1.end(); it++)
@@ -229,9 +234,9 @@ void check_vector(){
 	std::cout << "\n" << std::endl;
 }
 void check_stack(){
-	ft::vector<int> VecForStack(5,100);
-	ft::stack<int> stack1(VecForStack);
-	ft::stack<int> stack2;
+	NAMESPACE::vector<int> VecForStack(5,100);
+	NAMESPACE::stack<int, NAMESPACE::vector<int> > stack1(VecForStack);
+	NAMESPACE::stack<int, NAMESPACE::vector<int> > stack2;
 	stack2 = stack1;
 	std::cout << "--------------------------------------------------" << std::endl;
 	std::cout << "|                   Check_Stack                  |" << std::endl;
@@ -272,16 +277,16 @@ void check_stack(){
 		std::cout << "stack 1 >= stack 2" << std::endl;
 }
 void check_map(){
-	typedef ft::map<char,int>::iterator iterator;
-	typedef ft::map<char,int>::reverse_iterator reverse_iterator;
-	ft::map<char, int> map1;
+	typedef NAMESPACE::map<char,int>::iterator iterator;
+	typedef NAMESPACE::map<char,int>::reverse_iterator reverse_iterator;
+	NAMESPACE::map<char, int> map1;
 	map1['a'] = 42;
 	map1['b'] = 1337;
 	map1['c'] = 31415;
 	map1['d'] = 24;
-	ft::map<char, int> map2(map1.begin(), map1.end());
-	ft::map<char, int> map3(map2);
-	ft::map<char, int> map4;
+	NAMESPACE::map<char, int> map2(map1.begin(), map1.end());
+	NAMESPACE::map<char, int> map3(map2);
+	NAMESPACE::map<char, int> map4;
 	map4 = map1;
 	std::cout << "--------------------------------------------------" << std::endl;
 	std::cout << "|                    Check_Map                   |" << std::endl;
@@ -333,13 +338,13 @@ void check_map(){
 	std::cout << "map1['a'] = " << map1['a'] << std::endl;
 	std::cout << "map1['z'] = " << map1['z'] << std::endl;
 	std::cout << "Modifiers\n" << std::endl;
-	ft::map<char,int> map5;
+	NAMESPACE::map<char,int> map5;
 	map5['z'] = 66;
 	map5['p'] = 33;
 	map5['x'] = -1;
-	ft::pair<char, int> fillmap = ft::make_pair('w', 54);
+	NAMESPACE::pair<char, int> fillmap = NAMESPACE::make_pair('w', 54);
 	std::cout << "Insert fillmap to map2" << std::endl;
-		ft::pair<iterator, bool> res = map2.insert(fillmap);
+		NAMESPACE::pair<iterator, bool> res = map2.insert(fillmap);
 		if (res.second)
 			std::cout << "insert done\n" << std::endl;
 		else
@@ -389,7 +394,7 @@ void check_map(){
 		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
 	std::cout << std::endl;
 	map1.swap(map2);
-	std::cout << "After" << std::endl;
+	std::cout << "ANAMESPACEer" << std::endl;
 	std::cout << "Map 1:" << std::endl;
 	std::cout << "Size -> " << map1.size() << std::endl;
 	for(iterator it = map1.begin(); it != map1.end(); it++)
@@ -408,12 +413,12 @@ void check_map(){
 		std::cout << "Key -> " << it->first << ", Value -> " << it->second << std::endl;
 	std::cout << std::endl;
 	std::cout << "key/value compare" << std::endl;
-	ft::map<char, int>::key_compare mycomp = map1.key_comp();
+	NAMESPACE::map<char, int>::key_compare mycomp = map1.key_comp();
 	if (mycomp(map1.begin()->first, 'a'))
 		std::cout << "key is 'a'" << std::endl;
 	else
 		std::cout << "key is not 'a'" << std::endl;
-	ft::pair<char, int> highest = *map1.rbegin();
+	NAMESPACE::pair<char, int> highest = *map1.rbegin();
 	iterator value_comp_it = map1.begin();
 	do {
 		std::cout << value_comp_it->first << " => " << value_comp_it->second << std::endl;
@@ -438,7 +443,7 @@ void check_map(){
 	std::cout << "w : first -> " << lower_it->first << ", second -> " << lower_it->second << std::endl;
 	std::cout << "a : first -> " << upper_it->first << ", second -> " << upper_it->second << std::endl;
 	std::cout << "Equal range" << std::endl;
-	ft::pair<iterator, iterator> ERpair = map1.equal_range('d');
+	NAMESPACE::pair<iterator, iterator> ERpair = map1.equal_range('d');
 	std::cout << "ERpair.first : first -> " << ERpair.first->first << ", second -> " << ERpair.first->second << std::endl;
 	std::cout << "ERpair.second : second -> " << ERpair.second->first << ", second -> " << ERpair.second->second << std::endl;
 }

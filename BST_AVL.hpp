@@ -94,11 +94,8 @@ namespace ft {
 			void						erase(iterator position){
                     deleteNode(position, position.base());
                     _Size--;
-                    //nodePtr last = clear_lastNode();
-                   // updateBalance(nodeLeft(_Root));
-                    //updateBalance(nodeRight(_Root));
-                    //insert_lastNode(last);
 			}
+			
 			ft::pair<iterator, bool>    insert(const value_type &val){
 				nodePtr last = clear_lastNode();
 				ft::pair<iterator, bool> ret = insertNode(val);
