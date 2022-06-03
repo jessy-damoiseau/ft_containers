@@ -82,7 +82,6 @@ namespace ft {
                 nodePtr last = clear_lastNode();
 				destroy(_Root);
                 insert_lastNode(last);
-                std::cout << "Size -> " << _Size << std::endl;
 				_Size = 0;
 			}
 			void	swap(BST_AVL &x) {
@@ -175,8 +174,11 @@ namespace ft {
                         tmp = tmp->left;
                     else if (_Comp(tmp->data.first, value.first))
                         tmp = tmp->right;
-                    else
-                        return ( ft::pair<iterator, bool>(iterator(tmp), false));
+                    else {
+                        _Alloc.destroy(node);
+                        _Alloc.deallocate(node, 1);
+                        return (ft::pair<iterator, bool>(iterator(tmp), false));
+                    }
                 }
                 _Size++;
                 if (_Comp(value.first, tmpPrev->data.first))
